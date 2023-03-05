@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hussein Web Store</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <style>
+        *
+        {
+            font-family : udemy sans,-apple-system,BlinkMacSystemFont,Roboto,segoe ui,Helvetica,Arial,sans-serif,apple color emoji,segoe ui emoji,segoe ui symbol;
+            background-color:#fef9f8;
+        }
+        .addBtn
+        {
+            width: 5rem;
+            height: 2.5rem;
+            border-radius: 0px;
+            border: 0.1px #1c1d1f solid;
+            background-color: transparent;
+            font-weight: 700;
+            line-height: 1.2;
+            letter-spacing: -.02rem;
+            font-size: .9rem;
+            cursor: pointer;
+        }
+
+        .delete-btn
+        {
+            width: 9rem;
+            height: 2.5rem;
+            border-radius: 0px;
+            border: 0.1px #1c1d1f solid;
+            background-color: #1c1d1f;
+            font-weight: 700;
+            line-height: 1.2;
+            letter-spacing: -.02rem;
+            font-size: .9rem;
+            color:white;
+            cursor:pointer;
+        }
+
+        .container
+        {
+            width: 70%;
+            margin : auto;
+            margin-top: 3rem;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+            flex-wrap: wrap;
+        }
+
+        .polaroid
+        {
+            width: 17rem;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+            margin-bottom: 25px;
+        }
+
+        .card-container
+        {
+            text-align: center;
+            padding: 10px 20px;
+        }
+
+
+
+
+    </style>
+</head>
+<body>
+    <script>
+        let deleteSet = new Set();
+
+        function handleChoose(sku)
+        {
+            if(deleteSet.has(sku))
+            {
+                deleteSet.delete(sku);
+            }
+            else deleteSet.add(sku);
+        }
+
+        function handleDelete()
+        {
+            $.ajax(
+            {
+                type: 'POST',
+                url: './deleteProducts.php',
+                dataType: 'json',
+                data: {data: [...deleteSet]}
+            }
+            )
+            ;
+            location.reload();window.location.href = "/";
+
+        }
+
+        $.ajax(
+            {
+                method: 'GET',
+                url: './getProducts.php',
+                dataType: 'json'
+            }
+        ).done(function(data)
+        {
+            $.map(data, function(product, i)
+            {
+                let imgSrc = '';
+                if(product?.property[0] === 'S') imgSrc = 'https://cdn.shopify.com/s/files/1/1890/2231/products/Spider-Man2BL_b38bf8b8-ea13-4e71-bcfb-7237470d42fe.jpg?v=1629219801';
+               else if(product?.property[0] === 'W') imgSrc = 'https://www.bookgeeks.in/wp-content/uploads/2020/06/Best-Indian-Books-by-Indian-Authors-1-1024x768.jpg';
+               else  imgSrc = 'https://cdn.shopify.com/s/files/1/0514/6794/4099/products/introspectroyalbluevelvetmodernsofa32_4.jpg?v=1673213369&width=1445';
+               
+                $('.container').append(
+                    '<div class=polaroid><img src='+imgSrc+' style=width:100% /><div class=card-container><h1 style = "font-size:1.2rem; font-weight:500">'+product?.sku+'</h1><h2 style= "font-size: 1rem; font-weight:400">'+product?.name+'</h2><h3 style="font-size:.9rem; font-weight:400">'+product?.price+'$</h3><h3 style="font-size:1rem; font-weight:400">'+product?.property+'</h3><input type="checkbox" class = delete-checkbox onclick="handleChoose(\''+product.sku+'\')" /></div></div>'
+                );
+            })
+
+        });
+    </script>
+
+    <div style="display:flex; justify-content: space-between; width: 70%; margin-left: 15%; margin-top: 3rem; align-items: center">
+        <h1 style="font-size: 2rem; font-weight: 500">
+            Products List
+        </h1>
+        <div style= "display:flex; justify-content:space-between; width:20%">
+            <a href = "./form.php">
+            <button class = 'addBtn'>
+                ADD
+            </button>
+            </a>
+            <button class = 'delete-btn' onclick = "handleDelete()">
+                MASS DELETE
+            </button>
+        </div>
+    </div>
+    <hr style="width:80%; margin : auto"/>
+
+    <div class = "container">
+        
+    
+    </div>
+
+    <div class="hello">
+    </div>
+
+    
+    
+</body>
+</html>

@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hussein Web Store</title>
+    <!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="form.css">
+    <style>
+        body
+        {
+            font-family : udemy sans,-apple-system,BlinkMacSystemFont,Roboto,segoe ui,Helvetica,Arial,sans-serif,apple color emoji,segoe ui emoji,segoe ui symbol;
+            background-color:#fef9f8;
+        }
+    </style>
+    
+    
+</head>
+<body>
+    <script>
+        
+    function typeChange () {
+    let type = $('#productType').val();
+    let dvd = $('.dvd');
+    let book = $('.book');
+    let furniture = $('.furniture');
+    switch (type) {
+        case "DVD":
+            dvd.css('display', 'block');
+            book.css('display', 'none');
+            furniture.css('display', 'none');
+            $("#size").prop('required',true);
+            $("#weight").prop('required',false);
+            $("#length").prop('required',false);
+            $("#width").prop('required',false);
+            $("#height").prop('required',false);
+            break;
+        case "Book":
+            dvd.css('display', 'none');
+            book.css('display', 'block');
+            furniture.css('display', 'none');
+            $("#size").prop('required',false);
+            $("#weight").prop('required',true);
+            $("#length").prop('required',false);
+            $("#width").prop('required',false);
+            $("#height").prop('required',false);
+            break;
+        case "Furniture":
+            dvd.css('display', 'none');
+            book.css('display', 'none');
+            furniture.css('display', 'block');
+            $("#size").prop('required',false);
+            $("#weight").prop('required',false);
+            $("#length").prop('required',true);
+            $("#width").prop('required',true);
+            $("#height").prop('required',true);
+            break;
+        default:
+            dvd.css('display', 'none');
+            book.css('display', 'none');
+            furniture.css('display', 'none');
+            $("#size").prop('required',false);
+            $("#weight").prop('required',false);
+            $("#length").prop('required',false);
+            $("#width").prop('required',false);
+            $("#height").prop('required',false);
+            break;
+    }
+    };
+
+   //Add new product
+   function handleSubmit(){
+
+    let jsonData = 
+    {
+        'sku' : $("#sku").val(),
+        'name' : $("#name").val(),
+        'price' : $("#price").val(),
+        'size' : $("#size").val(),
+        'weight' : $("#weight").val(),
+        'length' : $("#length").val(),
+        'width' : $("#width").val(),
+        'height' : $("#height").val(),
+        'type' : $("#productType").val()
+    }
+
+    $.ajax(
+            {
+                method: 'POST',
+                dataType:'json',
+                url: './addProduct.php',
+                data: JSON.stringify(jsonData),
+                contentType: "application/json",
+                success:function(data)
+                {
+                    if(data?.status == 201)
+                    {
+                        $('#err').css('display', 'block');
+
+                    }
+                    else
+                    {
+                        window.location.href = "/";
+                    }
+                }
+            }
+        );
+
+
+   };
+
+
+
+    </script>
+
+    <div style="display: flex; justify-content:space-between; width:70%; margin-left:15%; margin-top:2rem; align-items:center">
+        <h1 style="font-size:2rem; font-weight:500">
+            Product Add
+        </h1>
+    </div>
+
+    <hr style="width:80%; margin:auto; margin-bottom:3rem"/>
+
+    <form id="product_form" style = "padding-left:15%" onsubmit="event.preventDefault(); handleSubmit() "  >
+        <div class = 'group'>
+            <label style="font-size:'1.8rem'"" for="sku">SKU</label>
+            <input id="sku" class='form-control' style="width:30rem" required/>
+        </div>
+
+        <div class = 'group'>
+            <label style = "font-size:'1.8rem'" for="name">Name</label>
+            <input id="name" class='form-control' style="width:30rem" required />
+        </div>
+
+        <div class = 'group'>
+            <label htmlFor="price" style="font-size:1.8rem">Price($)</label>
+            <input id="price" class='form-control' type="number" min={0} style="width:30rem" required/>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:2.5rem; margin-bottom:3rem">
+            <label style="font-size:1.8rem" for="productType">
+                Type Switcher
+            </label>
+            <div class="selectdiv">
+                <select id="productType" onChange="typeChange()"  required>
+                    <option value = ''>Select Type</option>
+                    <option value = 'DVD'>DVD</option>
+                    <option value = 'Furniture'>Furniture</option>
+                    <option value = 'Book'>Book</option>
+                </select> 
+            </div>
+        </div>
+
+        <div class='dvd' style="display:none;">
+        <div class='group'>
+            <label style="font-size:'1.8rem'" for="size">
+                Size (MB)
+            </label>
+            <div style="display:'flex'; flex-direction:'column'">
+                <input id="size" class = "form-control" style="width:'20rem'" type="number" required />
+                <small class="form-text text-muted" style="margin-top:'1.5rem'">Enter the Size in MB</small>
+            </div>
+        </div>
+       </div>
+
+       <div class='book' style="display:none">
+        <div class='group'>
+            <label style="font-size:'1.8rem'" for="weight">
+                Weight (KG)
+            </label>
+            <div style="display:'flex'; flex-direction:'column'">
+                <input id="weight" class = "form-control" style="width:'20rem'" type="number" required />
+                <small class="form-text text-muted" style="margin-top:'1.5rem'">Enter the Weight in KG</small>
+            </div>
+        </div>
+        </div>
+
+        <div class="furniture" style="display:none">
+        <div class="group">
+            <label style="font-size:'1.8rem'" for="length">
+                Length (CM)
+            </label>
+            <div style="display:'flex'; flex-direction:'column'">
+                <input  id="length" class = "form-control" style="width:'20rem'" type="number" required />
+                <small class="form-text text-muted" style="margin-top:'1.5rem'">Enter the Length in CM</small>
+            </div>
+        </div>
+        <div class="group">
+            <label style="font-size:'1.8rem'" for="width">
+                Width (CM)
+            </label>
+            <div style="display:'flex'; flex-direction:'column'">
+                <input  id="width" class = "form-control" style="width:'20rem'" type="number" required />
+                <small class="form-text text-muted" style="margin-top:'1.5rem'">Enter the Width in CM</small>
+            </div>
+        </div>
+        <div class="group" >
+            <label style="font-size:'1.8rem'" for="height">
+                Height (CM)
+            </label>
+            <div style="display:'flex'; flex-direction:'column'">
+                <input  id="height" class = "form-control" type="number" style="width:'20rem'" required  />
+                <small class="form-text text-muted" style="margin-top:'1.5rem'">Enter the Height in CM</small>
+            </div>
+        </div>
+
+        </div>
+    
+
+        <div style="display: none; color:red; font-size:2rem; margin-bottom:1.5rem" id='err'>
+            *SKU value is already there, It can't be Duplicated.
+
+        </div>
+
+        <div style= "display:'flex'; justify-content:'space-around'; width:'20%'">
+            <button class="add-btn"  type='submit' >
+                Save
+            </button>
+            <button class="cancel-btn" type='button' >
+                Cancel
+            </button>
+        </div>
+
+
+    </form>
+
+    
+</body>
+</html>
