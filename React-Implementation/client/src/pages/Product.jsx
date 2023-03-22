@@ -31,7 +31,7 @@ export default function Product() {
     async function fetchData()
     {
 
-        return await axios.get('./getProducts.php');
+        return await axios.get('http://localhost:80/tuts/getProducts.php');
     
         //let x =  await fetch('http://localhost:80/tuts/getProducts.php', {method : "GET"});
         //console.log(x);
@@ -90,11 +90,11 @@ export default function Product() {
 
     async function handleMassDelete()
     {
-        //await axios.delete('http://localhost:80/tuts/deleteProducts.php', {data: [...deleteSet]}).then((response)=>console.log("Cookies are ", document.cookie));
+        await axios.delete('http://localhost:80/tuts/deleteProducts.php', {data: [...deleteSet]});
 
 
         //deployment trials
-        await axios.post('deleteProducts.php',  [...deleteSet]);
+        //await axios.post('deleteProducts.php',  [...deleteSet]);
         setRefresh(refresh+1);
         //await fetch('deleteProducts.php', { method: 'DELETE', data: [...deleteSet] });
     }

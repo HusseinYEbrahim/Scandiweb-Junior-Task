@@ -26,8 +26,9 @@ export default function ProductAdd() {
 
 
 
-    async function handleSubmit()
+    async function handleSubmit(event)
     {
+        event.preventDefault();
 
         var selectBox = document.getElementById("productType");
         let payload =
@@ -45,30 +46,15 @@ export default function ProductAdd() {
 
         //console.log(payload);
 
-        /*let data = await axios.post('http://localhost:80/tuts/addProduct.php', payload, {withCredentials: true}).then((response)=>{
-            alert('back');
-            alert("Cookies are " + document.cookie)});*/
+        let data = await axios.post('http://localhost:80/tuts/addProduct.php', payload);
 
-        let data = await axios.post('../../addProduct.php', payload);
-
-        //let data ='';
-        /*fetch('../../addProduct.php', {method:"POST", payload})
-        .then((response)=>data = JSON.stringify(response));*/
-
-        //fetch api for sessions
-        /*await fetch('../../addProduct.php', {method: "POST", body: JSON.stringify(payload)})
-        .then((response)=>{
-            data = JSON.stringify(response);
-    });*/
-
-        //console.log(data);
-        //alert(data?.status);
         if(data?.status === 201)
         {
             setError('block');
-            alert('Duplicate SKUs aren`t allowed');
         }
-        //navigate("/");
+        else{
+            navigate("/");
+        }
 
     }
 
@@ -190,7 +176,7 @@ export default function ProductAdd() {
 
         </div>
 
-        <div style={{display: error, color:'red'}}>
+        <div style={{display: error, color:'red', fontSize:'1.5rem', marginBottom:'1.3rem'}}>
             *SKU value is already there, It can't be Duplicated.
 
         </div>
