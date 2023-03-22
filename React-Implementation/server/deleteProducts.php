@@ -3,7 +3,7 @@
 http_response_code(201);
 
 header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: POST');
+header('Access-Control-Allow-Methods: DELETE');
 header('Access-Control-Allow-Headers: *');
 
 
@@ -22,29 +22,12 @@ if(!$conn)
 }
 
 //Getting the List of SKUs to be deleted
-//$jsonData = file_get_contents('php://input');
-$jsonData = $_POST['data'];
-$listToBeDeleted = $_POST['data'];
+$jsonData = file_get_contents('php://input');
+$jsonData = json_decode($jsonData, true);
 
 
-if($listToBeDeleted == null)
-{
-    echo 'No Data to Be Deleted';
-    exit(0);
-}
+$db->deleteProducts($conn, $jsonData);
 
-$sql = "DELETE FROM Products WHERE sku = :id";
-
-$stmt = $conn->prepare($sql);
-
-foreach($listToBeDeleted as $deletedId)
-{
-    $stmt->bindParam(':id', $deletedId);
-    $stmt->execute();
-}
-
-http_response_code(200);
-echo 'Data Deleted Successfully';
 
 
 
