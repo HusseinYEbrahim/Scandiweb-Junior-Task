@@ -22,29 +22,11 @@ if(!$conn)
 }
 
 //Getting the List of SKUs to be deleted
-//$jsonData = file_get_contents('php://input');
 $jsonData = $_POST['data'];
 $listToBeDeleted = $_POST['data'];
 
+$db->deleteProducts($conn, $listToBeDeleted);
 
-if($listToBeDeleted == null)
-{
-    echo 'No Data to Be Deleted';
-    exit(0);
-}
-
-$sql = "DELETE FROM Products WHERE sku = :id";
-
-$stmt = $conn->prepare($sql);
-
-foreach($listToBeDeleted as $deletedId)
-{
-    $stmt->bindParam(':id', $deletedId);
-    $stmt->execute();
-}
-
-http_response_code(200);
-echo 'Data Deleted Successfully';
 
 
 
